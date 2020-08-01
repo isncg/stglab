@@ -1,6 +1,6 @@
 using Godot;
 using System;
-
+using isn;
 public class STGStage : Node2D
 {
 	// Declare member variables here. Examples:
@@ -14,7 +14,12 @@ public class STGStage : Node2D
 	public override void _Ready()
 	{
 		contentNode = GetNode("ViewportContainer/Viewport/bg/content") as Node2D;
-		CreateBullet();
+		Event<EventType.Bullet.Create>.Register(CreateBullet);
+		Event<EventType.Bullet.Create>.Dispatch();
+		
+	}
+	public override void _ExitTree(){
+		Event<EventType.Bullet.Create>.UnRegister(CreateBullet);
 	}
 
 	public void CreateBullet(){

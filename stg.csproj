@@ -61,5 +61,8 @@
     <Compile Include="STGBullet.cs" />
     <Compile Include="STGStage.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="scripts/**/*.cs"/>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
