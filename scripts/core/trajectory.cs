@@ -1,23 +1,53 @@
 using Godot;
+using System;
 using System.Collections.Generic;
 namespace isn
 {
+
+
     public interface ITrajectory{
-        void GetTransform(float t, ref ProjectileState projTransform);        
+        ProjectileState Calc(float t);        
     }
 
-    public class TrajectoryOffset{
-        public Vector2 origin;
+
+
+    // public class TrajectoryModifier{
+    //     public Vector2 origin;
+    //     public float rotation;
+    //     public TrajectoryParam Calc(ITrajectory trajectory, 
+    //                             float t, ref TrajectoryParam projTransform)
+    //     {
+    //         TrajectoryParam result = new TrajectoryParam();
+    //         trajectory.Calc(t, ref projTransform);
+    //         float px = Mathf.Cos(rotation)*projTransform.offsetOrigin.x - Mathf.Sin(rotation)*projTransform.offsetOrigin.y;
+    //         float py = Mathf.Sin(rotation)*projTransform.offsetOrigin.x + Mathf.Cos(rotation)*projTransform.offsetOrigin.y;
+    //         result.offsetOrigin.x = px;
+    //         result.offsetOrigin.y = py;
+    //         result.offsetRotation =projTransform.offsetRotation+ rotation;
+            
+    //         return result;
+    //     }
+    // }
+
+    public class TrajectoryParam{
+        public Vector2 translation;
         public float rotation;
-        public void GetOffsetTransform(ITrajectory trajectory, 
-                                float t, ref ProjectileState projTransform)
+        public float lifeTime;
+    }
+
+
+    public static class TrajectoryUtil{
+        public static ProjectileState CalcProjectilePosAndRot(ITrajectory trajectory, TrajectoryParam param)
         {
-            trajectory.GetTransform(t, ref projTransform);
-            float px = Mathf.Cos(rotation)*projTransform.position.x - Mathf.Sin(rotation)*projTransform.position.y;
-            float py = Mathf.Sin(rotation)*projTransform.position.x + Mathf.Cos(rotation)*projTransform.position.y;
-            projTransform.position.x = px;
-            projTransform.position.y = py;
-            projTransform.rotation += rotation;
+            ProjectileState result = trajectory.Calc(param.lifeTime);
+            Console.WriteLine(string.Format("Calc pos: {0}", result.position));
+            float px = Mathf.Cos(param.rotation)*result.position.x - Mathf.Sin(param.rotation)*result.position.y;
+            float py = Mathf.Sin(param.rotation)*result.position.x + Mathf.Cos(param.rotation)*result.position.y;
+            result.position.x = px;
+            result.position.y = py;
+            result.rotation+=param.rotation;
+            
+            return result;
         }
     }
 
@@ -41,12 +71,14 @@ namespace isn
     }
 
     public class DirectTrajectory : ITrajectory
-    {       
-        public void GetTransform(float t, ref ProjectileState state)
+    {
+        public ProjectileState Calc(float t)
         {
-            state.position.x = 0;
-            state.position.y = t*state.speed;
-            state.rotation = 0;
+            return new ProjectileState(){
+                position = new Vector2(0,t),
+                rotation = 0
+            };          
         }
+
     }
 }

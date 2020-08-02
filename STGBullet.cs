@@ -9,6 +9,8 @@ public class STGBullet : Node2D, IUIBullet
 	// private string b = "text";
 
 	// Called when the node enters the scene tree for the first time.
+	public ITrajectory trajectory = null;
+	public TrajectoryParam param = null;
 
 	public int BulletID{get;private set;}
 	public void Register(){
@@ -19,15 +21,29 @@ public class STGBullet : Node2D, IUIBullet
 
 	}
 
+	static Vector2 initPos = Vector2.Left*1000;
+	public override void _EnterTree(){
+		Position = initPos;
+	}
+
 	public override void _Ready()
 	{
-		
+
+		//param.lifeTime = 0;
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-		this.Position+=Vector2.Down*delta*20;
+		if(trajectory!=null){
+			param.lifeTime+=delta*100;
+			var state = TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param);
+			this.Position = state.position;
+			this.Rotation = state.rotation;
+			Console.WriteLine(string.Format("LT: {0}, pos: {1}", param.lifeTime, state.position));
+		}
+
+		//this.Position+=Vector2.Down*delta*20;
 	}
 
 	private int regID;
@@ -40,4 +56,12 @@ public class STGBullet : Node2D, IUIBullet
     {
         this.regID = -1;
     }
+
+	public void OnAlloc(){
+
+	}
+
+	public void OnRecycle(){
+
+	}
 }
