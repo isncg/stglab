@@ -15,7 +15,19 @@ public class STGStage : Node2D
 	{
 		contentNode = GetNode("ViewportContainer/Viewport/bg/content") as Node2D;
 		Event<EventType.Bullet.Create>.Register(CreateBullet);
-		Event<EventType.Bullet.Create>.Dispatch();
+		
+		isn.Timer.Add(100, ()=>{
+			Event<EventType.Bullet.Create>.Dispatch();
+		});
+
+		isn.Timer.Add(800, ()=>{
+			Event<EventType.Bullet.Create>.Dispatch();
+		});
+
+		isn.Timer.Add(300, ()=>{
+			Event<EventType.Bullet.Create>.Dispatch();
+		});
+		
 		
 	}
 	public override void _ExitTree(){
@@ -27,9 +39,11 @@ public class STGStage : Node2D
 		contentNode.AddChild(bullet);
 	}
 
-//  // Called every frame. 'delta' is the elapsed time since the previous frame.
-//  public override void _Process(float delta)
-//  {
-//      
-//  }
+
+
+	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public override void _Process(float delta)
+	{
+		isn.Timer.Tick();
+	}
 }
