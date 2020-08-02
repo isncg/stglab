@@ -1,6 +1,0 @@
-D:\myproj\stg\.mono\temp\bin\Debug\stg.dll
-D:\myproj\stg\.mono\temp\bin\Debug\stg.pdb
-D:\myproj\stg\.mono\temp\obj\Debug\stg.csprojAssemblyReference.cache
-D:\myproj\stg\.mono\temp\obj\Debug\stg.csproj.CoreCompileInputs.cache
-D:\myproj\stg\.mono\temp\obj\Debug\stg.dll
-D:\myproj\stg\.mono\temp\obj\Debug\stg.pdb
