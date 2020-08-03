@@ -36,7 +36,7 @@ public class STGBullet : Node2D, IUIBullet
 	public override void _Process(float delta)
 	{
 		if(trajectory!=null){
-			param.lifeTime+=delta*100;
+			param.lifeTime+=delta;
 			var state = TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param);
 			this.Position = state.position;
 			this.Rotation = state.rotation;

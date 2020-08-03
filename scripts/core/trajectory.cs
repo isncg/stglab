@@ -33,13 +33,14 @@ namespace isn
         public Vector2 translation;
         public float rotation;
         public float lifeTime;
+        public float speed;
     }
 
 
     public static class TrajectoryUtil{
         public static ProjectileState CalcProjectilePosAndRot(ITrajectory trajectory, TrajectoryParam param)
         {
-            ProjectileState result = trajectory.Calc(param.lifeTime);
+            ProjectileState result = trajectory.Calc(param.lifeTime* param.speed);
             Console.WriteLine(string.Format("Calc pos: {0}", result.position));
             float px = Mathf.Cos(param.rotation)*result.position.x - Mathf.Sin(param.rotation)*result.position.y;
             float py = Mathf.Sin(param.rotation)*result.position.x + Mathf.Cos(param.rotation)*result.position.y;

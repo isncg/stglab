@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace isn{
     public class EventType{
         public class Bullet{
-            public class Create{}
+            public class TestFire{}
         }
     }
 

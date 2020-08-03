@@ -18,14 +18,9 @@ public class STGStage : Node2D
 	public override void _Ready()
 	{
 		contentNode = GetNode("ViewportContainer/Viewport/bg/content") as Node2D;
-		Event<EventType.Bullet.Create>.Register(CreateBullet);
+		Event<EventType.Bullet.TestFire>.Register(CreateBullet);
 		
-		var paramList = fc.CreateRadiation(new ProjectileState(){
-			position = Vector2.Zero,
-			rotation = 0,			
-		}, 10, 0.1f);
-
-		FireBullet(tl.Get(TrajectoryType.DIRECT), paramList);
+		
 
 
 		// isn.Timer.Add(100, ()=>{
@@ -42,13 +37,25 @@ public class STGStage : Node2D
 		
 		
 	}
+
+	public override void _Input(InputEvent @event){
+		if(@event is InputEventKey key){
+			if(key.Pressed && key.Scancode == (uint)KeyList.Z){
+				Event<EventType.Bullet.TestFire>.Dispatch();
+			}
+		}
+	}
 	public override void _ExitTree(){
-		Event<EventType.Bullet.Create>.UnRegister(CreateBullet);
+		Event<EventType.Bullet.TestFire>.UnRegister(CreateBullet);
 	}
 
 	public void CreateBullet(){
-		var bullet = (STGBullet)resBullet.Instance();
-		contentNode.AddChild(bullet);
+		var paramList = fc.CreateRadiation(new ProjectileState(){
+			position = Vector2.Zero,
+			rotation = 0,		
+		}, 10, 0.1f, 800);
+
+		FireBullet(tl.Get(TrajectoryType.DIRECT), paramList);
 	}
 
 
