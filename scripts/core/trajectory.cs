@@ -6,7 +6,7 @@ namespace isn
 
 
     public interface ITrajectory{
-        ProjectileState Calc(float t);        
+        void Calc(float t, ref ProjectileState result);        
     }
 
 
@@ -38,17 +38,15 @@ namespace isn
 
 
     public static class TrajectoryUtil{
-        public static ProjectileState CalcProjectilePosAndRot(ITrajectory trajectory, TrajectoryParam param)
+        public static void CalcProjectilePosAndRot(ITrajectory trajectory, TrajectoryParam param, ref ProjectileState result)
         {
-            ProjectileState result = trajectory.Calc(param.lifeTime* param.speed);
-            Console.WriteLine(string.Format("Calc pos: {0}", result.position));
+            trajectory.Calc(param.lifeTime* param.speed, ref result);
+            //Console.WriteLine(string.Format("Calc pos: {0}", result.position));
             float px = Mathf.Cos(param.rotation)*result.position.x - Mathf.Sin(param.rotation)*result.position.y;
             float py = Mathf.Sin(param.rotation)*result.position.x + Mathf.Cos(param.rotation)*result.position.y;
             result.position.x = px;
             result.position.y = py;
-            result.rotation+=param.rotation;
-            
-            return result;
+            result.rotation+=param.rotation;            
         }
     }
 
@@ -73,12 +71,15 @@ namespace isn
 
     public class DirectTrajectory : ITrajectory
     {
-        public ProjectileState Calc(float t)
+        public void Calc(float t, ref ProjectileState result)
         {
-            return new ProjectileState(){
-                position = new Vector2(0,t),
-                rotation = 0
-            };          
+            result.position.x = 0;
+            result.position.y = t;
+            result.rotation = 0;
+            // return new ProjectileState(){
+            //     position = new Vector2(0,t),
+            //     rotation = 0
+            // };          
         }
 
     }

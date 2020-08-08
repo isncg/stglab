@@ -6,6 +6,11 @@ namespace isn{
         public class Bullet{
             public class TestFire{}
         }
+
+        internal class Stage
+        {
+            internal class ClearAllBullets{}        
+        }
     }
 
     public static class Event<EventTypeCls>{

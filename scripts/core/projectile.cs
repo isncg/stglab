@@ -7,6 +7,7 @@ namespace isn
         public Vector2 position = Vector2.Zero;
         public float rotation = 0;
 
+        public bool isRunning = false;
 
         public ProjectileState(){}
 

@@ -14,11 +14,12 @@ public class STGStage : Node2D
 	Node2D contentNode;
 
 	FireControl fc = new FireControl();
-	TrajectoryLib tl = new TrajectoryLib();
+	TrajectoryLib trajectoryLib = new TrajectoryLib();
 	public override void _Ready()
 	{
 		contentNode = GetNode("ViewportContainer/Viewport/bg/content") as Node2D;
 		Event<EventType.Bullet.TestFire>.Register(CreateBullet);
+		Event<EventType.Stage.ClearAllBullets>.Register(ClearAllBullets);
 		
 		
 
@@ -43,10 +44,15 @@ public class STGStage : Node2D
 			if(key.Pressed && key.Scancode == (uint)KeyList.Z){
 				Event<EventType.Bullet.TestFire>.Dispatch();
 			}
+
+			if(key.Pressed && key.Scancode == (uint)KeyList.X){
+				Event<EventType.Stage.ClearAllBullets>.Dispatch();
+			}
 		}
 	}
 	public override void _ExitTree(){
 		Event<EventType.Bullet.TestFire>.UnRegister(CreateBullet);
+		Event<EventType.Stage.ClearAllBullets>.UnRegister(ClearAllBullets);
 	}
 
 	public void CreateBullet(){
@@ -55,15 +61,20 @@ public class STGStage : Node2D
 			rotation = 0,		
 		}, 10, 0.1f, 800);
 
-		FireBullet(tl.Get(TrajectoryType.DIRECT), paramList);
+		FireBullet(trajectoryLib.Get(TrajectoryType.DIRECT), paramList);
 	}
 
 
 	public void FireBullet(ITrajectory trajectory, List<TrajectoryParam> paramList){
+		if(!fireEnable){
+			Console.WriteLine("[stage] fire bullet while !fireEnable");
+			return;
+		}
 		foreach(var param in paramList){
 			var bullet = AllocBullet();
 			bullet.trajectory = trajectory;
 			bullet.param = param;
+			bullet.state.isRunning = true;
 		}
 	}
 
@@ -86,9 +97,13 @@ public class STGStage : Node2D
 			int count = bulletAllocated.Count;
 			if(count<20)
 				count = 20;
+			if(count > 100)
+				count = 100;
 			for(int i=0;i<count;i++){
 				bullet = (STGBullet)resBullet.Instance();
+				bullet.hostStage = this;
 				bullet.Name = string.Format("bullet_{0}", creationCount);
+				Console.WriteLine("[stage] create bullet instance:"+bullet.Name);
 				creationCount++;
 				contentNode.AddChild(bullet);
 				bulletPool.Enqueue(bullet);
@@ -101,11 +116,27 @@ public class STGStage : Node2D
 		return bullet;
 	}
 
+	bool fireEnable = true;
+	public void ClearAllBullets(){
+		fireEnable = false;
+		foreach(var bullet in bulletAllocated){
+			bullet.state.isRunning = false;
+		}
 
+		isn.Timer.Add(1, ()=>{
+			while(bulletAllocated.Count>0){
+				var bullet = bulletAllocated.Dequeue();
+				bullet.Position = Vector2.Up*1000;
+				bulletPool.Enqueue(bullet);
+
+			}
+			fireEnable = true;
+		});
+	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-		isn.Timer.Tick();
+		isn.Timer.Tick();		
 	}
 }

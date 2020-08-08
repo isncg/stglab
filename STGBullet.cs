@@ -12,6 +12,8 @@ public class STGBullet : Node2D, IUIBullet
 	public ITrajectory trajectory = null;
 	public TrajectoryParam param = null;
 
+	public STGStage hostStage = null;
+
 	public int BulletID{get;private set;}
 	public void Register(){
 
@@ -33,14 +35,15 @@ public class STGBullet : Node2D, IUIBullet
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
+	public ProjectileState state = new ProjectileState();
 	public override void _Process(float delta)
 	{
-		if(trajectory!=null){
+		if(trajectory!=null && state.isRunning){
 			param.lifeTime+=delta;
-			var state = TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param);
+			TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param, ref state);
 			this.Position = state.position;
 			this.Rotation = state.rotation;
-			Console.WriteLine(string.Format("LT: {0}, pos: {1}", param.lifeTime, state.position));
+			//Console.WriteLine(string.Format("LT: {0}, pos: {1}", param.lifeTime, state.position));
 		}
 
 		//this.Position+=Vector2.Down*delta*20;
