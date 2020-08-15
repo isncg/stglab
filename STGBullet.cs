@@ -9,9 +9,7 @@ public class STGBullet : Node2D, IUIBullet
 	// private string b = "text";
 
 	// Called when the node enters the scene tree for the first time.
-	public ITrajectory trajectory = null;
-	public TrajectoryParam param = null;
-
+	
 	public STGStage hostStage = null;
 
 	public int BulletID{get;private set;}
@@ -35,16 +33,24 @@ public class STGBullet : Node2D, IUIBullet
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
-	public ProjectileState state = new ProjectileState();
+	public BulletState state = null;
+    float lifetime = 0;
 	public override void _Process(float delta)
 	{
-		if(trajectory!=null && state.isRunning){
-			param.lifeTime+=delta;
-			TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param, ref state);
-			this.Position = state.position;
-			this.Rotation = state.rotation;
-			//Console.WriteLine(string.Format("LT: {0}, pos: {1}", param.lifeTime, state.position));
-		}
+		// if(trajectory!=null && state.isRunning){
+		// 	param.lifeTime+=delta;
+		// 	TrajectoryUtil.CalcProjectilePosAndRot(trajectory, param, ref state);
+		// 	this.Position = state.position;
+		// 	this.Rotation = state.rotation;
+		// 	//Console.WriteLine(string.Format("LT: {0}, pos: {1}", param.lifeTime, state.position));
+		//}
+
+        if(state!=null){
+            lifetime+=delta;
+            state.Update(lifetime);
+            this.Position = state.BulletPosition;
+            this.Rotation = state.BulletRotation;
+        }
 
 		//this.Position+=Vector2.Down*delta*20;
 	}

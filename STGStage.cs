@@ -56,25 +56,33 @@ public class STGStage : Node2D
 	}
 
 	public void CreateBullet(){
-		var paramList = fc.CreateRadiation(new ProjectileState(){
-			position = Vector2.Zero,
-			rotation = 0,		
-		}, 10, 0.1f, 800);
+		// var paramList = fc.CreateRadiation(new ProjectileState(){
+		// 	position = Vector2.Zero,
+		// 	rotation = 0,		
+		// }, 10, 0.1f, 800);
 
-		FireBullet(trajectoryLib.Get(TrajectoryType.DIRECT), paramList);
+        var stateList = fc.CreateRadiation(
+            trajectoryLib.Get(TrajectoryType.DIRECT), 
+            10, 
+            0.1f, 
+            800,
+            new Vector2(0,100),
+            Mathf.Pi/3
+            );
+
+		FireBullet(stateList);
 	}
 
 
-	public void FireBullet(ITrajectory trajectory, List<TrajectoryParam> paramList){
+	public void FireBullet(List<BulletState> paramList){
 		if(!fireEnable){
 			Console.WriteLine("[stage] fire bullet while !fireEnable");
 			return;
 		}
 		foreach(var param in paramList){
 			var bullet = AllocBullet();
-			bullet.trajectory = trajectory;
-			bullet.param = param;
-			bullet.state.isRunning = true;
+			bullet.state = param;
+			//bullet.state.isRunning = true;
 		}
 	}
 
@@ -120,7 +128,7 @@ public class STGStage : Node2D
 	public void ClearAllBullets(){
 		fireEnable = false;
 		foreach(var bullet in bulletAllocated){
-			bullet.state.isRunning = false;
+			bullet.state = null;
 		}
 
 		isn.Timer.Add(1, ()=>{
