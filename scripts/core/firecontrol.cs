@@ -23,7 +23,11 @@ namespace isn{
             float radiationStep, 
             float speed,
             Vector2 trajPosition,
-            float trajRotation
+            float trajRotation,
+            double currentStageTime,
+            double firstFireDelay,
+            double lastFireDelay
+
         ){
             var result = new List<BulletState>(count);
             var halfRotation = radiationStep*(count-1)/2;
@@ -33,6 +37,13 @@ namespace isn{
                 param.SetTimeAndSpeed(speed, 0, 100);
                 result.Add(param);
             }
+            result[0].timeBegin = currentStageTime+firstFireDelay;
+            if(count>1){
+                for(int i=1;i<count;i++){
+                    result[i].timeBegin = currentStageTime + (lastFireDelay - firstFireDelay)*i/(count-1);
+                }
+            }
+
             return result;
         }
 

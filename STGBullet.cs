@@ -34,7 +34,7 @@ public class STGBullet : Node2D, IUIBullet
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public BulletState state = null;
-    float lifetime = 0;
+    //float lifetime = 0;
 	public override void _Process(float delta)
 	{
 		// if(trajectory!=null && state.isRunning){
@@ -46,8 +46,8 @@ public class STGBullet : Node2D, IUIBullet
 		//}
 
         if(state!=null){
-            lifetime+=delta;
-            state.Update(lifetime);
+            //lifetime+=delta;
+            state.Update(isn.Timer.DefaultTimer.Time);
             this.Position = state.BulletPosition;
             this.Rotation = state.BulletRotation;
         }

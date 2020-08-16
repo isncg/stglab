@@ -67,7 +67,10 @@ public class STGStage : Node2D
             0.1f, 
             800,
             new Vector2(0,100),
-            Mathf.Pi/3
+            -Mathf.Pi/6,
+            isn.Timer.DefaultTimer.Time,
+            0,
+            0.2
             );
 
 		FireBullet(stateList);
@@ -131,7 +134,7 @@ public class STGStage : Node2D
 			bullet.state = null;
 		}
 
-		isn.Timer.Add(1, ()=>{
+		isn.Timer.FrameDelay(1, ()=>{
 			while(bulletAllocated.Count>0){
 				var bullet = bulletAllocated.Dequeue();
 				bullet.Position = Vector2.Up*1000;
@@ -145,6 +148,6 @@ public class STGStage : Node2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(float delta)
 	{
-		isn.Timer.Tick();		
+		isn.Timer.Tick(delta);		
 	}
 }
