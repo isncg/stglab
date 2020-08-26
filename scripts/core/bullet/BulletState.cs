@@ -10,7 +10,7 @@ namespace isn{
         public float BulletRotation{get{return bulletRotation;}}
         public double timeBegin = 0;
         public double timeEnd = 100;
-        private double speed = 100;
+        public double speed = 100;
 
         public void Update(double stageTime){
             if(stageTime>=timeBegin && stageTime<=timeEnd){

@@ -70,7 +70,8 @@ public class STGStage : Node2D
             -Mathf.Pi/6,
             isn.Timer.DefaultTimer.Time,
             0,
-            0.2
+            0.2,
+			0.5
             );
 
 		FireBullet(stateList);

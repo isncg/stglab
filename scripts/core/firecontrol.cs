@@ -1,8 +1,10 @@
 using Godot;
 using System.Collections.Generic;
 
-namespace isn{
-    public class FireControl{
+namespace isn
+{
+    public class FireControl
+    {
 
         // public List<TrajectoryParam> CreateRadiation(ProjectileState origin, int count, float rotationStep, float speed){
         //     var result = new List<TrajectoryParam>(count);
@@ -18,29 +20,36 @@ namespace isn{
         // }
 
         public List<BulletState> CreateRadiation(
-            ITrajectory trajectory, 
-            int count, 
-            float radiationStep, 
+            ITrajectory trajectory,
+            int count,
+            float radiationStep,
             float speed,
             Vector2 trajPosition,
             float trajRotation,
             double currentStageTime,
             double firstFireDelay,
-            double lastFireDelay
+            double lastFireDelay,
+            double duration = 2
 
-        ){
+        )
+        {
             var result = new List<BulletState>(count);
-            var halfRotation = radiationStep*(count-1)/2;
-            for(int i=0;i<count;i++){
+            var halfRotation = radiationStep * (count - 1) / 2;
+            for (int i = 0; i < count; i++)
+            {
                 var param = new BulletState();
-                param.SetTrajectoryAndTransform(trajectory, trajPosition, trajRotation + radiationStep*i - halfRotation);
-                param.SetTimeAndSpeed(speed, 0, 100);
+                param.SetTrajectoryAndTransform(trajectory, trajPosition, trajRotation + radiationStep * i - halfRotation);
+                //param.SetTimeAndSpeed(speed, 0, 100);
+                param.speed = speed;
                 result.Add(param);
             }
-            result[0].timeBegin = currentStageTime+firstFireDelay;
-            if(count>1){
-                for(int i=1;i<count;i++){
-                    result[i].timeBegin = currentStageTime + (lastFireDelay - firstFireDelay)*i/(count-1);
+            result[0].timeBegin = currentStageTime + firstFireDelay;
+            if (count > 1)
+            {
+                for (int i = 1; i < count; i++)
+                {
+                    result[i].timeBegin = currentStageTime + (lastFireDelay - firstFireDelay) * i / (count - 1);
+                    result[i].timeEnd = result[i].timeBegin + duration;
                 }
             }
 
